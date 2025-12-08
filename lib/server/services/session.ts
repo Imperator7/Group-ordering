@@ -15,15 +15,13 @@ export async function getExistingSessions() {
   return sessions
 }
 
-export async function getOccupiedTables(): Promise<TableNumber[]> {
+export async function getOccupiedTables(): Promise<SessionResponse[]> {
   await dbConnect()
 
-  const result = await SessionModel.find(
-    { status: 'open' },
-    { tableNumber: 1, _id: 0 }
-  ).lean()
+  const result = await SessionModel.find({ status: 'open' }).lean()
+  const parsed = result.map(toSessionResponse)
 
-  return result.map((r) => r.tableNumber) as TableNumber[]
+  return parsed
 }
 
 export async function createSession(
