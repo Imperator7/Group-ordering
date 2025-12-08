@@ -12,6 +12,7 @@ export const OrderItemSchema = z.object({
 export type OrderItem = z.infer<typeof OrderItemSchema>
 
 export const OrderSchema = z.object({
+  sessionId: z.string().min(1),
   tableNumber: z.string().min(1),
   status: OrderStatusSchema,
   items: z.array(OrderItemSchema).min(1),
@@ -37,8 +38,9 @@ export interface IOrderItemDb extends Omit<OrderItem, 'menuItemId'> {
   menuItem: Types.ObjectId
 }
 
-export interface IOrderDb extends Omit<Order, 'items'> {
+export interface IOrderDb extends Omit<Order, 'items' | 'sessionId'> {
   _id: Types.ObjectId
+  sessionId: Types.ObjectId
   items: IOrderItemDb[]
   createdAt: Date
   updatedAt: Date
@@ -47,6 +49,7 @@ export interface IOrderDb extends Omit<Order, 'items'> {
 export function toOrderResponse(doc: IOrderDb): OrderResponse {
   return {
     id: doc._id.toString(),
+    sessionId: doc.sessionId.toString(),
     tableNumber: doc.tableNumber,
     status: doc.status,
     items: doc.items.map((item) => ({

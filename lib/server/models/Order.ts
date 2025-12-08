@@ -15,6 +15,11 @@ const OrderItemSchema = new Schema<IOrderItemDb>(
 
 const OrderSchema = new Schema<IOrderDb>(
   {
+    sessionId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Session',
+      required: true,
+    },
     tableNumber: { type: String, default: 'test' },
     status: {
       type: String,
