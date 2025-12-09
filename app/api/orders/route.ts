@@ -16,14 +16,14 @@ export async function POST(req: Request) {
       { status: 400 }
     )
   }
-  const { tableNumber, items } = validData.data
+  const { sessionId, items } = validData.data
 
   if (!items || items.length === 0) {
     return NextResponse.json({ error: 'Cart is empty' }, { status: 400 })
   }
 
   try {
-    const orderRes = await createOrder({ tableNumber, items })
+    const orderRes = await createOrder({ sessionId, items })
     return NextResponse.json({ success: true, data: orderRes }, { status: 201 })
   } catch (e) {
     console.error('Error in POST /api/orders:', e)

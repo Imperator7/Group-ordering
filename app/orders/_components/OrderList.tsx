@@ -1,31 +1,24 @@
 'use client'
 
-import { IOrder, IOrderItem } from '@/lib/server/models/Order'
+import { OrderResponse } from '@/shared/schemas/order'
+import { timeSince } from '@/lib/helper'
 
 type OrderListProps = {
-  orders: IOrder[]
+  orders: OrderResponse[]
 }
 const OrderList = ({ orders }: OrderListProps) => {
   const statusColors = {
-    pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
     preparing: 'bg-blue-100 text-blue-800 border-blue-300',
+    ready: 'bg-indigo-100 text-indigo-800 border-indigo-300',
     served: 'bg-green-100 text-green-800 border-green-300',
     cancelled: 'bg-gray-100 text-gray-800 border-gray-300',
   }
 
   const statusLabels = {
-    pending: '⏳ Pending',
     preparing: '👨‍🍳 Preparing',
+    ready: '✨ Ready',
     served: '✓ Served',
     cancelled: '✕ Cancelled',
-  }
-
-  const formatTime = (date?: Date) => {
-    if (!date) return ''
-    return new Date(date).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    })
   }
 
   return (
@@ -56,7 +49,7 @@ const OrderList = ({ orders }: OrderListProps) => {
               </button>
             </div>
             <div className="text-sm text-gray-500">
-              {formatTime(order.createdAt)}
+              {timeSince(order.createdAt)}
             </div>
           </div>
 

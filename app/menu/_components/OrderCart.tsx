@@ -1,5 +1,6 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
 import { CartItem } from '../hooks/useCart'
 import CartItemCard from './CartItemCard'
 import EmptyCart from './EmptyCart'
@@ -33,7 +34,7 @@ type OrderCartProps = {
   removeOne: (id: string) => void
   removeItem: (id: string) => void
   openCart: () => void
-  confirmOrder: () => void
+  confirmOrder: (sessionId: string) => void
 }
 
 const OrderCart = ({
@@ -44,6 +45,9 @@ const OrderCart = ({
   openCart,
   confirmOrder,
 }: OrderCartProps) => {
+  const searchParams = useSearchParams()
+  const sessionId = searchParams.get('sessionId')
+
   return (
     <div className="my-2">
       <h1 className="font-bold">ตะกร้าสินค้า</h1>
@@ -62,7 +66,7 @@ const OrderCart = ({
       <div className="px-4 py-2">
         <button
           className="bg-blue-900 text-white font-medium w-full rounded py-2"
-          onClick={confirmOrder}
+          onClick={() => sessionId && confirmOrder(sessionId)}
         >
           ยืนยันออเดอร์
         </button>

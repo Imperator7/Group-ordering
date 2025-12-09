@@ -7,6 +7,7 @@ import {
   OrderResponse,
   toOrderResponse,
 } from '@/shared/schemas/order'
+import SessionModel from '../models/Session'
 
 export type GetOrdersFilter = {
   tableNumber?: string
@@ -26,7 +27,9 @@ export async function getOrders(
   await dbConnect()
 
   const orders = await OrderModel.find(filter).lean()
-  const parsed = orders.map(toOrderResponse)
+  const parsed = orders
+    .map(toOrderResponse)
+    .filter((order): order is OrderResponse => order !== null)
 
   return parsed
 }
@@ -40,7 +43,19 @@ export async function createOrder(
 ): Promise<OrderResponse> {
   await dbConnect()
 
-  const { items, tableNumber } = data
+  const { items, sessionId } = data
+
+  const session = await SessionModel.findById(sessionId).exec()
+
+  if (!session) {
+    throw new Error('Session not found.')
+  }
+
+  if (session.status !== 'open') {
+    throw new Error(
+      `Cannot place order. Session ${sessionId} is ${session.status}.`
+    )
+  }
 
   const totalPrice = items.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -48,8 +63,9 @@ export async function createOrder(
   )
 
   const doc = await OrderModel.create({
-    tableNumber: tableNumber,
-    status: 'pending',
+    sessionId: sessionId,
+    tableNumber: session.tableNumber,
+    status: 'preparing',
     total: totalPrice,
     items: items.map(({ menuItemId, ...rest }) => ({
       menuItem: new Types.ObjectId(menuItemId),
@@ -58,6 +74,10 @@ export async function createOrder(
   })
 
   const res = toOrderResponse(doc)
+
+  if (!res) {
+    throw new Error('Failed to create order')
+  }
 
   return res
 }

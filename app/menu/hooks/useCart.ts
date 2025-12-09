@@ -79,7 +79,7 @@ export function useCart({ menuItems }: CartProps) {
     0
   )
 
-  const confirmOrder = async () => {
+  const confirmOrder = async (sessionId: string) => {
     const menuItems: OrderItem[] = cart.map((cartItem) => {
       return {
         menuItemId: cartItem.id,
@@ -90,7 +90,7 @@ export function useCart({ menuItems }: CartProps) {
     })
 
     const submitData: CreateOrderInput = {
-      tableNumber: '1', // implement further
+      sessionId: sessionId,
       items: menuItems,
     }
 
