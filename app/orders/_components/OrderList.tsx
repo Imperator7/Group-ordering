@@ -6,89 +6,135 @@ import { timeSince } from '@/lib/helper'
 type OrderListProps = {
   orders: OrderResponse[]
 }
+
 const OrderList = ({ orders }: OrderListProps) => {
-  const statusColors = {
-    preparing: 'bg-blue-100 text-blue-800 border-blue-300',
-    ready: 'bg-indigo-100 text-indigo-800 border-indigo-300',
-    served: 'bg-green-100 text-green-800 border-green-300',
-    cancelled: 'bg-gray-100 text-gray-800 border-gray-300',
+  const statusConfig = {
+    preparing: {
+      bg: 'bg-amber-50',
+      text: 'text-amber-700',
+      border: 'border-amber-200',
+      dot: 'bg-amber-500',
+      label: 'Preparing',
+    },
+    ready: {
+      bg: 'bg-emerald-50',
+      text: 'text-emerald-700',
+      border: 'border-emerald-200',
+      dot: 'bg-emerald-500',
+      label: 'Ready',
+    },
+    served: {
+      bg: 'bg-slate-50',
+      text: 'text-slate-500',
+      border: 'border-slate-200',
+      dot: 'bg-slate-400',
+      label: 'Served',
+    },
+    cancelled: {
+      bg: 'bg-red-50',
+      text: 'text-red-600',
+      border: 'border-red-200',
+      dot: 'bg-red-400',
+      label: 'Cancelled',
+    },
   }
 
-  const statusLabels = {
-    preparing: '👨‍🍳 Preparing',
-    ready: '✨ Ready',
-    served: '✓ Served',
-    cancelled: '✕ Cancelled',
+  if (orders.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-slate-400">
+        <svg
+          className="w-16 h-16 mb-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.5}
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+          />
+        </svg>
+        <p className="text-lg font-medium">No orders yet</p>
+        <p className="text-sm">Orders will appear here when placed</p>
+      </div>
+    )
   }
 
   return (
-    <ul className="grid sm:grid-cols-2 md:grid-cols-3 p-4 gap-4 max-w-[1200px]">
-      {orders.map((order) => (
-        <li
-          className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
-          key={order.id}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <div className="bg-indigo-600 text-white font-bold text-lg px-3 py-1 rounded">
-                โต๊ะ {order.tableNumber}
-              </div>
-              <button
-                disabled={
-                  order.status === 'served' || order.status === 'cancelled'
-                }
-                className={`px-3 py-1 rounded-full text-sm font-medium border ${
-                  statusColors[order.status]
-                } ${
-                  order.status !== 'served' && order.status !== 'cancelled'
-                    ? 'cursor-pointer hover:opacity-80'
-                    : 'cursor-default'
-                }`}
-              >
-                {statusLabels[order.status]}
-              </button>
-            </div>
-            <div className="text-sm text-gray-500">
-              {timeSince(order.createdAt)}
-            </div>
-          </div>
+    <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {orders.map((order) => {
+        const status = statusConfig[order.status]
+        const isInactive =
+          order.status === 'served' || order.status === 'cancelled'
 
-          <div className="space-y-2 mb-3">
-            {order.items.map((item, index) => (
-              <div key={index} className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-0.5 rounded">
-                      {item.quantity}x
-                    </span>
-                    <span className="font-medium text-gray-900">
-                      {item.name}
-                    </span>
-                  </div>
-                  {item.note && (
-                    <div className="ml-8 text-sm text-orange-600 italic mt-1">
-                      📝 {item.note}
-                    </div>
-                  )}
-                </div>
-                <span className="text-gray-700 font-medium ml-4">
-                  ${(item.price * item.quantity).toFixed(2)}
+        return (
+          <li
+            key={order.id}
+            className={`bg-white rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden ${
+              isInactive ? 'opacity-60' : ''
+            }`}
+          >
+            <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <span className="bg-slate-900 text-white font-bold text-sm px-2.5 py-1 rounded-md">
+                  #{order.tableNumber}
                 </span>
+                <button
+                  disabled={isInactive}
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
+                    status.bg
+                  } ${status.text} ${status.border} ${
+                    !isInactive ? 'cursor-pointer hover:brightness-95' : ''
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`} />
+                  {status.label}
+                </button>
               </div>
-            ))}
-          </div>
+              <time className="text-xs text-slate-400 font-medium">
+                {timeSince(order.createdAt)}
+              </time>
+            </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-gray-200">
-            <div className="text-sm text-gray-500">
-              {order.items.length} item{order.items.length !== 1 ? 's' : ''}
+            <div className="px-4 py-3 space-y-2.5">
+              {order.items.map((item, index) => (
+                <div key={index} className="flex justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="shrink-0 bg-slate-100 text-slate-600 text-xs font-semibold w-6 h-6 rounded flex items-center justify-center">
+                        {item.quantity}
+                      </span>
+                      <span className="font-medium text-slate-800 truncate">
+                        {item.name}
+                      </span>
+                    </div>
+                    {item.note && (
+                      <p className="ml-8 text-xs text-amber-600 mt-1 truncate">
+                        Note: {item.note}
+                      </p>
+                    )}
+                  </div>
+                  <span className="text-slate-600 text-sm font-medium tabular-nums">
+                    ฿{(item.price * item.quantity).toFixed(2)}
+                  </span>
+                </div>
+              ))}
             </div>
-            <div className="text-lg font-bold text-gray-900">
-              Total: ${order.total.toFixed(2)}
+
+            <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-t border-slate-100">
+              <span className="text-xs text-slate-400">
+                {order.items.length} item{order.items.length !== 1 ? 's' : ''}
+              </span>
+              <span className="text-base font-bold text-slate-900">
+                ฿{order.total.toFixed(2)}
+              </span>
             </div>
-          </div>
-        </li>
-      ))}
+          </li>
+        )
+      })}
     </ul>
   )
 }
+
 export default OrderList
