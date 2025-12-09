@@ -46,6 +46,7 @@ export function useCart({ menuItems }: CartProps) {
           id: id,
           name: menuItem.name,
           price: menuItem.price,
+          image: menuItem.image,
           quantity: 1,
         }
 
