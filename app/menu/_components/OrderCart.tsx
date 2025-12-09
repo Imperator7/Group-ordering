@@ -1,6 +1,5 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
 import { CartItem } from '../../../hooks/useCart'
 import CartItemCard from './CartItemCard'
 import EmptyCart from './EmptyCart'
@@ -44,6 +43,7 @@ type OrderCartProps = {
   openCart: () => void
   confirmOrder: (sessionId: string) => void
   getOrderedCount: (menuItemId: string) => number
+  sessionId: string
 }
 
 const OrderCart = ({
@@ -54,10 +54,8 @@ const OrderCart = ({
   openCart,
   confirmOrder,
   getOrderedCount,
+  sessionId,
 }: OrderCartProps) => {
-  const searchParams = useSearchParams()
-  const sessionId = searchParams.get('sessionId')
-
   return (
     <div className="my-2">
       <h1 className="font-bold">ตะกร้าสินค้า</h1>

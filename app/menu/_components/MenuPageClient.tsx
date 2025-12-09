@@ -80,6 +80,7 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
               openCart={openCart}
               confirmOrder={confirmOrder}
               getOrderedCount={getOrderedCount}
+              sessionId={sessionId}
             />
           </div>
         </div>
