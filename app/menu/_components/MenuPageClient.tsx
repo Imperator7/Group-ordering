@@ -1,15 +1,30 @@
 'use client'
+
+import { useSearchParams } from 'next/navigation'
 import { MenuItemResponse } from '@/shared/schemas/menuItem'
-import { useCart } from '../hooks/useCart'
+import { useCart } from '../../../hooks/useCart'
 import Menu from './Menu'
 import OrderCart from './OrderCart'
 import { useState } from 'react'
+import { useOrders } from '@/hooks/useOrders'
 
 type MenuPageClientProps = {
   menuItems: MenuItemResponse[]
 }
 
 const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
+  const searchParams = useSearchParams()
+  const sessionId = searchParams.get('sessionId')
+  let tableNumber = searchParams.get('table')
+
+  if (!sessionId) {
+    throw new Error('sessionId is not found')
+  }
+
+  if (!tableNumber) {
+    tableNumber = '-'
+  }
+
   const {
     cart,
     addItemOne,
@@ -18,7 +33,7 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
     confirmOrder,
     totalItems,
   } = useCart({ menuItems })
-
+  const { getOrderedCount } = useOrders(sessionId)
   const [showCart, setShowCart] = useState<boolean>(false)
 
   const openCart = () => setShowCart(true)
@@ -32,6 +47,8 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
           addCartOne={addItemOne}
           openCart={openCart}
           cartLength={totalItems.toString()}
+          getOrderedCount={getOrderedCount}
+          tableNumber={tableNumber}
         />
       </div>
 
@@ -62,6 +79,7 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
               removeItem={removeItem}
               openCart={openCart}
               confirmOrder={confirmOrder}
+              getOrderedCount={getOrderedCount}
             />
           </div>
         </div>

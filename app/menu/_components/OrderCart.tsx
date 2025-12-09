@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { CartItem } from '../hooks/useCart'
+import { CartItem } from '../../../hooks/useCart'
 import CartItemCard from './CartItemCard'
 import EmptyCart from './EmptyCart'
 
@@ -10,19 +10,27 @@ type CartListProps = {
   addOne: (id: string) => void
   removeOne: (id: string) => void
   removeItem: (id: string) => void
+  getOrderedCount: (menuItemId: string) => number
 }
 
-const CartList = ({ cart, addOne, removeOne, removeItem }: CartListProps) => (
+const CartList = ({
+  cart,
+  addOne,
+  removeOne,
+  removeItem,
+  getOrderedCount,
+}: CartListProps) => (
   <div className="space-y-2">
     {cart.map((cartItem) => (
       <CartItemCard
-        key={`cart-${cartItem.name}`}
+        key={`cart-${cartItem.id}`}
         cartItem={cartItem}
         operation={{
           addOne: addOne,
           removeOne: removeOne,
           removeItem: removeItem,
         }}
+        orderedCount={getOrderedCount(cartItem.id)}
       />
     ))}
   </div>
@@ -35,6 +43,7 @@ type OrderCartProps = {
   removeItem: (id: string) => void
   openCart: () => void
   confirmOrder: (sessionId: string) => void
+  getOrderedCount: (menuItemId: string) => number
 }
 
 const OrderCart = ({
@@ -44,6 +53,7 @@ const OrderCart = ({
   removeItem,
   openCart,
   confirmOrder,
+  getOrderedCount,
 }: OrderCartProps) => {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('sessionId')
@@ -60,6 +70,7 @@ const OrderCart = ({
             addOne={addOne}
             removeOne={removeOne}
             removeItem={removeItem}
+            getOrderedCount={getOrderedCount}
           />
         )}
       </div>

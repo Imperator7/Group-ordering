@@ -1,7 +1,33 @@
 import { NextResponse } from 'next/server'
 import dbConnect from '@/lib/db'
-import { createOrder } from '@/lib/server/services/order'
+import { createOrder, getOrders } from '@/lib/server/services/order'
 import { CreateOrderSchema } from '@/shared/schemas/order'
+
+export async function GET(req: Request) {
+  await dbConnect()
+
+  const { searchParams } = new URL(req.url)
+  const sessionId = searchParams.get('sessionId')
+
+  if (!sessionId) {
+    return NextResponse.json(
+      { error: 'sessionId is required' },
+      { status: 400 }
+    )
+  }
+
+  try {
+    await dbConnect()
+    const orders = await getOrders({ sessionId })
+    return NextResponse.json(orders)
+  } catch (e) {
+    console.error('Error in GET /api/orders:', e)
+    return NextResponse.json(
+      { error: 'Failed to fetch orders' },
+      { status: 500 }
+    )
+  }
+}
 
 export async function POST(req: Request) {
   await dbConnect()

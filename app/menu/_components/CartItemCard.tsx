@@ -1,5 +1,5 @@
 import { Minus, Plus, Trash } from 'lucide-react'
-import { CartItem } from '../hooks/useCart'
+import { CartItem } from '../../../hooks/useCart'
 import Image from 'next/image'
 
 type CartItemCardProps = {
@@ -9,13 +9,18 @@ type CartItemCardProps = {
     removeOne: (id: string) => void
     removeItem: (id: string) => void
   }
+  orderedCount: number
 }
 
-const CartItemCard = ({ cartItem, operation }: CartItemCardProps) => {
+const CartItemCard = ({
+  cartItem,
+  operation,
+  orderedCount,
+}: CartItemCardProps) => {
   return (
     <div
       key={cartItem.name}
-      className="flex items-center gap-1 p-3 bg-white rounded border border-gray-200 shadow-sm"
+      className="flex items-center gap-2 p-3 bg-white rounded border border-gray-200 shadow-sm"
     >
       <Image
         src={cartItem.image || '/image-not-found.jpg'}
@@ -29,7 +34,11 @@ const CartItemCard = ({ cartItem, operation }: CartItemCardProps) => {
         <h3 className="font-semibold text-sm text-gray-900 truncate">
           {cartItem.name}
         </h3>
-        <p className="text-xs text-gray-500 truncate">Classic preparation</p>
+        {orderedCount > 0 && (
+          <span className="text-xs text-orange-600 font-medium">
+            กำลังมา {orderedCount} จาน
+          </span>
+        )}
       </div>
 
       <div className="flex items-center gap-3 shrink-0">

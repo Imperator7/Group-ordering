@@ -10,18 +10,18 @@ import {
 import SessionModel from '../models/Session'
 
 export type GetOrdersFilter = {
-  tableNumber?: string
+  sessionId?: string
   status?: OrderStatus
 }
 
 export async function getOrders(
   filter: GetOrdersFilter = {}
 ): Promise<OrderResponse[]> {
-  const { tableNumber, status } = filter
+  const { sessionId, status } = filter
 
   const query: FilterQuery<GetOrdersFilter> = {}
 
-  if (tableNumber) query.tableNumber = tableNumber
+  if (sessionId) query.sessionId = sessionId
   if (status) query.status = status
 
   await dbConnect()
