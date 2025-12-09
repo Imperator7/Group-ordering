@@ -13,7 +13,7 @@ export default function SessionQRModal({
   tableNumber,
   onClose,
 }: SessionQRModalProps) {
-  const orderUrl = `${window.location.origin}/order?sessionId=${sessionId}&table=${tableNumber}`
+  const orderUrl = `${window.location.origin}/menu?sessionId=${sessionId}&table=${tableNumber}`
 
   return (
     <div
