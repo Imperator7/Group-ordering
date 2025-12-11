@@ -9,6 +9,7 @@ type MenuProps = {
   openCart: () => void
   cartLength: string
   getOrderedCount: (menuItemId: string) => number
+  existInCart: (menuItemId: string) => boolean
   tableNumber: string
 }
 
@@ -19,6 +20,7 @@ const Menu = ({
   cartLength,
   getOrderedCount,
   tableNumber,
+  existInCart,
 }: MenuProps) => {
   const isEmpty = !menu || menu.length === 0
 
@@ -52,6 +54,7 @@ const Menu = ({
           menu={menu}
           addCartOne={addCartOne}
           getOrderedCount={getOrderedCount}
+          existInCart={existInCart}
         />
       )}
     </section>

@@ -32,6 +32,7 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
     removeItem,
     confirmOrder,
     totalItems,
+    existInCart,
   } = useCart({ menuItems })
   const { getOrderedCount } = useOrders(sessionId)
   const [showCart, setShowCart] = useState<boolean>(false)
@@ -49,6 +50,7 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
           cartLength={totalItems.toString()}
           getOrderedCount={getOrderedCount}
           tableNumber={tableNumber}
+          existInCart={existInCart}
         />
       </div>
 

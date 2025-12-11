@@ -55,7 +55,7 @@ const SessionDashboard = ({
         </header>
 
         {hasOccupiedTables ? (
-          <ul className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          <ul className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))]">
             {occupiedTables.map((session) => (
               <SessionCard
                 key={session.id}

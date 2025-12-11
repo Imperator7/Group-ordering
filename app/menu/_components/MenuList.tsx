@@ -7,9 +7,15 @@ type MenuListProps = {
   menu: MenuItemResponse[]
   addCartOne: (id: string) => void
   getOrderedCount: (menuItemId: string) => number
+  existInCart: (menuItemId: string) => boolean
 }
 
-const MenuList = ({ menu, addCartOne, getOrderedCount }: MenuListProps) => {
+const MenuList = ({
+  menu,
+  addCartOne,
+  getOrderedCount,
+  existInCart,
+}: MenuListProps) => {
   return (
     <ul className="grid grid-cols-1">
       {menu.map((menuItem) => (
@@ -18,6 +24,7 @@ const MenuList = ({ menu, addCartOne, getOrderedCount }: MenuListProps) => {
           key={menuItem.id}
           addCartOne={addCartOne}
           orderedCount={getOrderedCount(menuItem.id)}
+          isInCart={existInCart(menuItem.id)}
         />
       ))}
     </ul>

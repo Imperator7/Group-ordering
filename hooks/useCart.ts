@@ -56,6 +56,10 @@ export function useCart({ menuItems }: CartProps) {
     [menuItems]
   )
 
+  const existInCart = (menuItemId: string): boolean => {
+    return cart.some((cartItem) => menuItemId === cartItem.id)
+  }
+
   const removeItemOne = useCallback((id: string) => {
     setCart((prev) =>
       prev
@@ -116,5 +120,6 @@ export function useCart({ menuItems }: CartProps) {
     totalItems,
     totalPrice,
     confirmOrder,
+    existInCart,
   }
 }

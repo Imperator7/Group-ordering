@@ -7,9 +7,15 @@ type MenuCardProps = {
   menuItem: MenuItemResponse
   addCartOne: (id: string) => void
   orderedCount: number
+  isInCart: boolean
 }
 
-const MenuCard = ({ menuItem, addCartOne, orderedCount }: MenuCardProps) => {
+const MenuCard = ({
+  menuItem,
+  addCartOne,
+  orderedCount,
+  isInCart,
+}: MenuCardProps) => {
   return (
     <li className="group flex items-center justify-between p-4 -mx-6 bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-yellow-200 transition-all duration-200">
       <div className="flex items-center gap-4 flex-1">
@@ -40,7 +46,10 @@ const MenuCard = ({ menuItem, addCartOne, orderedCount }: MenuCardProps) => {
       </div>
 
       <motion.button
-        className="flex items-center justify-center w-10 h-10 bg-blue-300 text-white rounded-full shadow-md cursor-pointer"
+        className={[
+          'flex items-center justify-center w-10 h-10 text-white rounded-full shadow-md cursor-pointer',
+          isInCart ? 'bg-blue-600' : 'bg-blue-300',
+        ].join(' ')}
         whileTap={{ scale: 0.8 }}
         transition={{ type: 'spring', stiffness: 300, damping: 10 }}
         onClick={() => addCartOne(menuItem.id)}
