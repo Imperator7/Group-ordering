@@ -35,7 +35,7 @@ const CartItemCard = ({
           {cartItem.name}
         </h3>
         {orderedCount > 0 && (
-          <span className="text-xs text-orange-600 font-medium">
+          <span className="text-xs text-green-600 font-medium">
             กำลังมา {orderedCount} จาน
           </span>
         )}

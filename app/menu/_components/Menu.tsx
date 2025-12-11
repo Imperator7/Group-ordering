@@ -38,7 +38,7 @@ const Menu = ({
           className="flex items-center space-x-2 px-4 py-2 text-white bg-black rounded-md hover:bg-gray-800 transition-colors"
         >
           <ShoppingBasket aria-hidden="true" />
-          <span>Cart</span>
+          <span>ตระกร้า</span>
           <span className="p-1 leading-none bg-white/15 rounded-xs text-sm font-medium">
             {cartLength}
           </span>
