@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react'
 import Image from 'next/image'
 import { MenuItemResponse } from '@/shared/schemas/menuItem'
+import { motion } from 'framer-motion'
 
 type MenuCardProps = {
   menuItem: MenuItemResponse
@@ -30,7 +31,7 @@ const MenuCard = ({ menuItem, addCartOne, orderedCount }: MenuCardProps) => {
             {menuItem.name}
           </h3>
           {orderedCount > 0 && (
-            <span className="text-xs text-yellow-600 font-medium">
+            <span className="text-xs text-green-600 font-medium">
               กำลังมา {orderedCount} จาน
             </span>
           )}
@@ -38,13 +39,15 @@ const MenuCard = ({ menuItem, addCartOne, orderedCount }: MenuCardProps) => {
         </div>
       </div>
 
-      <button
-        className="flex items-center justify-center w-10 h-10 bg-blue-300 text-white rounded-full hover:bg-yellow-600 active:scale-95 transition-all duration-150 shadow-md"
+      <motion.button
+        className="flex items-center justify-center w-10 h-10 bg-blue-300 text-white rounded-full shadow-md cursor-pointer"
+        whileTap={{ scale: 0.8 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 10 }}
         onClick={() => addCartOne(menuItem.id)}
         aria-label={`Add ${menuItem.name} to cart`}
       >
         <Plus size={20} />
-      </button>
+      </motion.button>
     </li>
   )
 }

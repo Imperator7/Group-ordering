@@ -29,7 +29,7 @@ const Menu = ({
           <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
             เมนู
           </h2>
-          <h3 className="p-2 bg-slate-300 font-bold rounded">
+          <h3 className="p-2 bg-slate-400 font-bold rounded text-white">
             โต๊ะ {tableNumber}
           </h3>
         </div>
