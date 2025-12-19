@@ -1,4 +1,4 @@
-# Group Meal Ordering
+# Dine Together
 
 A modern, full-stack web application designed for group meal ordering in a restaurant setting, built with **Next.js 16** and **MongoDB**. This system allows staff to manage table sessions through a dashboard and enables customers to order items by scanning a QR code assigned to their specific table.
 
