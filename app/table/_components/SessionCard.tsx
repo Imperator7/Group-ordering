@@ -86,14 +86,14 @@ const SessionCard = ({
         <button
           type="button"
           onClick={goToMenu}
-          className="flex-1 bg-slate-900 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-slate-800 transition"
+          className="flex-1 bg-slate-900 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-slate-800 transition cursor-pointer"
         >
           Visit Table&apos;s menu
         </button>
         <button
           type="button"
           onClick={() => handleCloseSession(session)}
-          className="px-4 py-2.5 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50 hover:border-slate-300 transition"
+          className="px-4 py-2.5 border border-red-200 text-red-600 rounded-lg text-sm font-medium hover:bg-red-200 hover:border-red-300 transition  cursor-pointer"
         >
           Close
         </button>

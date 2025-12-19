@@ -6,7 +6,10 @@ import { closeSession } from '@/lib/client/services/session'
 import { useState } from 'react'
 import CloseConfirmationModal from './CloseConfirmationModal'
 import SessionQRModal from './SessionQRModal'
+import AddSessionModal from './AddSessionModal'
 import { useRouter } from 'next/navigation'
+import { Plus } from 'lucide-react'
+import { TABLE_NUMBERS } from '@/config'
 
 const SessionDashboard = ({
   occupiedTables,
@@ -17,6 +20,14 @@ const SessionDashboard = ({
   const [selectedSession, setSelectedSession] =
     useState<SessionResponse | null>(null)
   const [qrSession, setQrSession] = useState<SessionResponse | null>(null)
+  const [isAddSessionOpen, setIsAddSessionOpen] = useState<boolean>(false)
+
+  const occupiedTableNumbers = new Set(
+    occupiedTables.map((session) => session.tableNumber)
+  )
+  const unoccupiedTableNumbers = TABLE_NUMBERS.filter(
+    (num) => !occupiedTableNumbers.has(num)
+  )
 
   const router = useRouter()
 
@@ -43,19 +54,28 @@ const SessionDashboard = ({
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <header className="mb-8">
-          <h1 className="text-2xl font-bold text-slate-900">Tables</h1>
-          <p className="text-slate-500 mt-1">
-            {hasOccupiedTables
-              ? `${occupiedTables.length} table${
-                  occupiedTables.length !== 1 ? 's' : ''
-                } currently occupied`
-              : 'No tables occupied'}
-          </p>
+        <header className="mb-8 justify-between flex">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Tables</h1>
+            <p className="text-slate-500 mt-1">
+              {hasOccupiedTables
+                ? `${occupiedTables.length} table${
+                    occupiedTables.length !== 1 ? 's' : ''
+                  } currently occupied`
+                : 'No tables occupied'}
+            </p>
+          </div>
+          <button
+            className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 cursor-pointer"
+            onClick={() => setIsAddSessionOpen(true)}
+          >
+            <Plus className="w-5 h-5" />
+            <span>Add Session</span>
+          </button>
         </header>
 
         {hasOccupiedTables ? (
-          <ul className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))]">
+          <ul className="grid grid-cols-[repeat(auto-fit,minmax(180px,300px))] gap-4">
             {occupiedTables.map((session) => (
               <SessionCard
                 key={session.id}
@@ -103,6 +123,12 @@ const SessionDashboard = ({
           onClose={() => setQrSession(null)}
         />
       )}
+
+      <AddSessionModal
+        unoccupiedTables={unoccupiedTableNumbers}
+        isOpen={isAddSessionOpen}
+        onClose={() => setIsAddSessionOpen(false)}
+      />
     </main>
   )
 }
