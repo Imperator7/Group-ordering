@@ -48,10 +48,10 @@ const MenuCard = ({
       <motion.button
         className={[
           'flex items-center justify-center w-10 h-10 text-white rounded-full shadow-md cursor-pointer',
-          isInCart ? 'bg-blue-600' : 'bg-blue-300',
+          isInCart ? 'bg-blue-800' : 'bg-blue-300',
         ].join(' ')}
         whileTap={{ scale: 0.8 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 10 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
         onClick={() => addCartOne(menuItem.id)}
         aria-label={`Add ${menuItem.name} to cart`}
       >
