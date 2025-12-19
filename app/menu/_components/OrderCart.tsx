@@ -61,7 +61,7 @@ const OrderCart = ({
       <h1 className="font-bold">ตะกร้าสินค้า</h1>
       <div className="p-4">
         {cart.length === 0 ? (
-          <EmptyCart openCart={openCart} />
+          <EmptyCart />
         ) : (
           <CartList
             cart={cart}
