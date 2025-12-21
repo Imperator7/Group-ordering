@@ -2,6 +2,23 @@
 
 A modern, full-stack web application designed for group meal ordering in a restaurant setting, built with **Next.js 16** and **MongoDB**. This system allows staff to manage table sessions through a dashboard and enables customers to order items by scanning a QR code assigned to their specific table.
 
+## 💻 How to Demo
+
+### 1. The Staff Dashboard (Admin View)
+
+_Access the hidden management interfaces used by restaurant staff._
+
+- **Table Manager:** [https://dinetogether.vercel.app/table](https://dinetogether.vercel.app/table) - Use this to view and manage active tables and generate QR sessions.
+- **Kitchen Display System:** [https://dinetogether.vercel.app/orders](https://dinetogether.vercel.app/orders) - Watch incoming orders appear here.
+
+### 2. The Customer View
+
+_Simulate a customer scanning a QR code for "Table 3"._
+
+- **Mobile Menu:** [Live Customer Demo Link](https://dinetogether.vercel.app/menu?sessionId=6947a8e16a882fae9384c37a&table=3) - Add items here and watch them appear as incoming order instantly.
+
+---
+
 ## 🚀 Features
 
 - **Table Management Dashboard**: A centralized view for staff to monitor occupied tables, track active sessions, and open new table sessions.
