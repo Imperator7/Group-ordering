@@ -20,7 +20,7 @@ const OrderSchema = new Schema<IOrderDb>(
       ref: 'Session',
       required: true,
     },
-    tableNumber: { type: String, default: 'test' },
+    tableNumber: { type: String },
     status: {
       type: String,
       enum: OrderStatusSchema.options,
