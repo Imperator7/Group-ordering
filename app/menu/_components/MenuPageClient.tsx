@@ -6,6 +6,7 @@ import Menu from './Menu'
 import OrderCart from './OrderCart'
 import { useState } from 'react'
 import { useOrderBySessionId } from '@/hooks/useOrder'
+import SessionQRModal from '@/components/SessionQRModal'
 
 type MenuPageClientProps = {
   menuItems: MenuItemResponse[]
@@ -22,9 +23,11 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
 
   const { getOrderedCount } = useOrderBySessionId(sessionId)
   const [showCart, setShowCart] = useState<boolean>(false)
+  const [showQR, setShowQR] = useState<boolean>(false)
 
   const openCart = () => setShowCart(true)
   const closeCart = () => setShowCart(false)
+  const openQR = () => setShowQR(true)
 
   return (
     <>
@@ -34,6 +37,7 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
           openCart={openCart}
           getOrderedCount={getOrderedCount}
           tableNumber={tableNumber}
+          openQR={openQR}
         />
       </div>
 
@@ -65,6 +69,13 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
           </div>
         </div>
       </div>
+      {showQR && (
+        <SessionQRModal
+          sessionId={sessionId}
+          tableNumber={tableNumber}
+          onClose={() => setShowQR(false)}
+        />
+      )}
     </>
   )
 }
