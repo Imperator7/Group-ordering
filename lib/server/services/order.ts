@@ -1,7 +1,7 @@
 import dbConnect from '@/lib/db'
 import { FilterQuery, Types } from 'mongoose'
 import OrderModel from '@/lib/server/models/Order'
-import { OrderStatus } from '@/config/index'
+import { OrderStatus, TableNumber } from '@/config/index'
 import {
   CreateOrderInput,
   OrderResponse,
@@ -34,8 +34,13 @@ export async function getOrders(
   return parsed
 }
 
-export async function getOrdersByTableId(tableId: string) {
-  console.log('waiting for implementation')
+export async function getOrdersByTableNumber(tableNumber: TableNumber) {
+  await dbConnect()
+
+  const orders = await OrderModel.find({ tableNumber: tableNumber })
+  const parsed = orders.map(toOrderResponse)
+
+  return parsed
 }
 
 export async function createOrder(
