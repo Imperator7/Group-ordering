@@ -33,7 +33,7 @@ export default function SessionQRModal({
           <QRCodeSVG value={qrUrl} size={200} level="H" />
         </div>
 
-        <div className="px-6 pb-6">
+        {/* <div className="px-6 pb-6">
           <button
             type="button"
             onClick={onClose}
@@ -41,7 +41,7 @@ export default function SessionQRModal({
           >
             Close
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   )
