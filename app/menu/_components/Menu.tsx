@@ -2,27 +2,18 @@ import MenuList from './MenuList'
 import EmptyMenu from './EmptyMenu'
 import { ShoppingBasket } from 'lucide-react'
 import { MenuItemResponse } from '@/shared/schemas/menuItem'
+import { useCartContext } from '@/contexts/CartContext'
 
 type MenuProps = {
   menu: MenuItemResponse[]
-  addCartOne: (id: string) => void
   openCart: () => void
-  cartLength: string
   getOrderedCount: (menuItemId: string) => number
-  existInCart: (menuItemId: string) => boolean
   tableNumber: string
 }
 
-const Menu = ({
-  menu,
-  addCartOne,
-  openCart,
-  cartLength,
-  getOrderedCount,
-  tableNumber,
-  existInCart,
-}: MenuProps) => {
+const Menu = ({ menu, openCart, getOrderedCount, tableNumber }: MenuProps) => {
   const isEmpty = !menu || menu.length === 0
+  const { totalItems, addOne: addCartOne, existInCart } = useCartContext()
 
   return (
     <section>
@@ -42,7 +33,7 @@ const Menu = ({
           <ShoppingBasket aria-hidden="true" />
           <span>ตระกร้า</span>
           <span className="p-1 leading-none bg-white/15 rounded-xs text-sm font-medium">
-            {cartLength}
+            {totalItems}
           </span>
         </button>
       </div>

@@ -2,6 +2,7 @@ import { MenuItemResponse } from '@/shared/schemas/menuItem'
 import MenuPageClient from './_components/MenuPageClient'
 import { getMenuItems } from '@/lib/server/services/menu'
 import { Suspense } from 'react'
+import { CartProvider } from './../../contexts/CartContext'
 
 const MenuPage = async () => {
   const menuItems: MenuItemResponse[] = await getMenuItems()
@@ -11,7 +12,9 @@ const MenuPage = async () => {
       <Suspense
         fallback={<div className="text-center p-4">Loading menu...</div>}
       >
-        <MenuPageClient menuItems={menuItems} />
+        <CartProvider menuItems={menuItems}>
+          <MenuPageClient menuItems={menuItems} />
+        </CartProvider>
       </Suspense>
     </main>
   )

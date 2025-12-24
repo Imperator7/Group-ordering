@@ -1,8 +1,10 @@
 'use client'
 
 import { CartItem } from '../../../hooks/useCart'
+import { useCartContext } from '@/contexts/CartContext'
 import CartItemCard from './CartItemCard'
 import EmptyCart from './EmptyCart'
+import { useSubmitOrder } from '@/hooks/useOrder'
 
 type CartListProps = {
   cart: CartItem[]
@@ -36,26 +38,32 @@ const CartList = ({
 )
 
 type OrderCartProps = {
-  cart: CartItem[]
-  addOne: (id: string) => void
-  removeOne: (id: string) => void
-  removeItem: (id: string) => void
   openCart: () => void
-  confirmOrder: (sessionId: string) => void
   getOrderedCount: (menuItemId: string) => number
   sessionId: string
 }
 
-const OrderCart = ({
-  cart,
-  addOne,
-  removeOne,
-  removeItem,
-  openCart,
-  confirmOrder,
-  getOrderedCount,
-  sessionId,
-}: OrderCartProps) => {
+const OrderCart = ({ getOrderedCount, sessionId }: OrderCartProps) => {
+  const { cart, addOne, removeOne, removeItem, clearCart } = useCartContext()
+  const { mutate: submitOrder, isPending } = useSubmitOrder(sessionId)
+
+  const handleSubmit = () => {
+    if (cart.length === 0) return
+
+    submitOrder(
+      {
+        sessionId,
+        items: cart.map((item) => ({
+          menuItemId: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+      },
+      { onSuccess: () => clearCart() }
+    )
+  }
+
   return (
     <div className="my-2">
       <h1 className="font-bold">ตะกร้าสินค้า</h1>
@@ -72,14 +80,16 @@ const OrderCart = ({
           />
         )}
       </div>
-      <div className="px-4 py-2">
-        <button
-          className="bg-blue-900 text-white font-medium w-full rounded py-2"
-          onClick={() => sessionId && confirmOrder(sessionId)}
-        >
-          ยืนยันออเดอร์
-        </button>
-      </div>
+      <button
+        className="bg-blue-900 text-white font-medium w-full rounded py-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        onClick={() => sessionId && handleSubmit()}
+        disabled={isPending}
+      >
+        {isPending && (
+          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        )}
+        {isPending ? 'กำลังส่ง...' : 'ยืนยันออเดอร์'}
+      </button>
     </div>
   )
 }

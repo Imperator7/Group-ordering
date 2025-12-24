@@ -2,11 +2,10 @@
 
 import { useSearchParams } from 'next/navigation'
 import { MenuItemResponse } from '@/shared/schemas/menuItem'
-import { useCart } from '../../../hooks/useCart'
 import Menu from './Menu'
 import OrderCart from './OrderCart'
 import { useState } from 'react'
-import { useOrders } from '@/hooks/useOrders'
+import { useOrderBySessionId } from '@/hooks/useOrder'
 
 type MenuPageClientProps = {
   menuItems: MenuItemResponse[]
@@ -15,26 +14,13 @@ type MenuPageClientProps = {
 const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('sessionId')
-  let tableNumber = searchParams.get('table')
+  const tableNumber = searchParams.get('table') ?? '0'
 
   if (!sessionId) {
     throw new Error('sessionId is not found')
   }
 
-  if (!tableNumber) {
-    tableNumber = '-'
-  }
-
-  const {
-    cart,
-    addItemOne,
-    removeItemOne,
-    removeItem,
-    confirmOrder,
-    totalItems,
-    existInCart,
-  } = useCart({ menuItems })
-  const { getOrderedCount } = useOrders(sessionId)
+  const { getOrderedCount } = useOrderBySessionId(sessionId)
   const [showCart, setShowCart] = useState<boolean>(false)
 
   const openCart = () => setShowCart(true)
@@ -45,12 +31,9 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
       <div className="pb-24">
         <Menu
           menu={menuItems}
-          addCartOne={addItemOne}
           openCart={openCart}
-          cartLength={totalItems.toString()}
           getOrderedCount={getOrderedCount}
           tableNumber={tableNumber}
-          existInCart={existInCart}
         />
       </div>
 
@@ -75,12 +58,7 @@ const MenuPageClient = ({ menuItems }: MenuPageClientProps) => {
 
           <div className="overflow-y-auto p-4">
             <OrderCart
-              cart={cart}
-              addOne={addItemOne}
-              removeOne={removeItemOne}
-              removeItem={removeItem}
               openCart={openCart}
-              confirmOrder={confirmOrder}
               getOrderedCount={getOrderedCount}
               sessionId={sessionId}
             />

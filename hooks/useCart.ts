@@ -1,13 +1,7 @@
 'use client'
 
 import { MenuItemResponse } from '@/shared/schemas/menuItem'
-import { useState, useCallback } from 'react'
-import { submitOrder } from '@/lib/client/services/orders'
-import {
-  CreateOrderInput,
-  OrderItem,
-  OrderResponse,
-} from '@/shared/schemas/order'
+import { useState, useCallback, useMemo } from 'react'
 
 export type CartItem = Pick<
   MenuItemResponse,
@@ -23,9 +17,9 @@ type CartProps = {
 export function useCart({ menuItems }: CartProps) {
   const [cart, setCart] = useState<CartItem[]>([])
 
-  const getItemId = (item: MenuItemResponse) => item.id
+  const getItemId = useCallback((item: MenuItemResponse) => item.id, [])
 
-  const addItemOne = useCallback(
+  const addOne = useCallback(
     (id: string) => {
       setCart((prev: CartItem[]) => {
         const existing = prev.find((item) => item.id === id)
@@ -60,7 +54,7 @@ export function useCart({ menuItems }: CartProps) {
     return cart.some((cartItem) => menuItemId === cartItem.id)
   }
 
-  const removeItemOne = useCallback((id: string) => {
+  const removeOne = useCallback((id: string) => {
     setCart((prev) =>
       prev
         .map((item) =>
@@ -78,48 +72,25 @@ export function useCart({ menuItems }: CartProps) {
     setCart([])
   }, [])
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0)
-  const totalPrice = cart.reduce(
-    (sum, item) => sum + (item.price ?? 0) * item.quantity,
-    0
+  const totalItems = useMemo(
+    () => cart.reduce((sum, item) => sum + item.quantity, 0),
+    [cart]
   )
-
-  const confirmOrder = async (sessionId: string) => {
-    const menuItems: OrderItem[] = cart.map((cartItem) => {
-      return {
-        menuItemId: cartItem.id,
-        name: cartItem.name,
-        price: cartItem.price,
-        quantity: cartItem.quantity,
-      }
-    })
-
-    const submitData: CreateOrderInput = {
-      sessionId: sessionId,
-      items: menuItems,
-    }
-
-    try {
-      const res: OrderResponse = await submitOrder(submitData)
-
-      clearCart()
-
-      return res
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const totalPrice = useMemo(
+    () =>
+      cart.reduce((sum, item) => sum + (item.price ?? 0) * item.quantity, 0),
+    [cart]
+  )
 
   return {
     cart,
     getItemId,
-    addItemOne,
-    removeItemOne,
+    addOne,
+    removeOne,
     removeItem,
     clearCart,
     totalItems,
     totalPrice,
-    confirmOrder,
     existInCart,
   }
 }

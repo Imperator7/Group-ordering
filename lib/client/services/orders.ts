@@ -1,10 +1,28 @@
-import { Post } from '@/lib/client/api'
+import { Get, Post } from '@/lib/client/api'
 import {
   OrderResponse,
   OrderResponseSchema,
   CreateOrderInput,
   CreateOrderSchema,
 } from '@/shared/schemas/order'
+import z from 'zod'
+
+export async function fetchOrders(): Promise<OrderResponse[]> {
+  const res = await Get(`/api/orders`, z.array(OrderResponseSchema))
+
+  return res
+}
+
+export async function fetchOrdersBySession(
+  sessionId?: string
+): Promise<OrderResponse[]> {
+  const res = await Get(
+    `/api/orders?sessionId=${sessionId}`,
+    z.array(OrderResponseSchema)
+  )
+
+  return res
+}
 
 export async function submitOrder(
   data: CreateOrderInput
@@ -15,14 +33,3 @@ export async function submitOrder(
 
   return response
 }
-
-// export async function changeOrderStatus(
-//   orderId: string,
-//   status: UpdateOrderStatusInput
-// ): Promise<OrderResponse> {
-//   const url = `/api/orders/${orderId}`
-
-//   const response = await Patch(url, status, UpdateOrderStatusSchema)
-
-//   return response
-// }
